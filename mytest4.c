@@ -82,7 +82,9 @@ int memoRead(){
 }
 void memoWrite(){
 		  char fileName[256];
-		  int i,flag=1;
+		  int i,fd,flag=1;
+		  char buf[256];
+		  chdir("memoDir");
 		  while(flag){
 					 puts("new file name");
 					 scanf("%s",fileName);
@@ -94,9 +96,25 @@ void memoWrite(){
 					 }
 					 if(i==cnt){
 								flag=0;
+								fd=open(fileName,O_RDWR|O_CREAT|O_TRUNC,0666);
+								if(fd<0) printf("file open error\n");
+								else{
 								printf("new file %s create completely \n",fileName);
+								}
 					 }
 							
 					 
 		  }
+		  puts("insert your message");
+		  while(1){
+		  fgets(buf,sizeof(buf),stdin);
+		  buf[strlen(buf)-1]='\0';
+		  if(!strcmp(buf,"end")){
+					 break;
+		  }
+		  buf[strlen(buf)]='\n';
+		  write(fd,buf,strlen(buf));
+		  }
+		  close(fd);
+		  chdir("..");
 }
